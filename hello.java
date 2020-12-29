@@ -5,7 +5,8 @@ public class hello {
 		return "Hello";
 	}
 	public static void main(String[] args) {
-		
+	hello obj = new hello();
+	System.out.println(obj.sayHello());	
 	}
 
 }
