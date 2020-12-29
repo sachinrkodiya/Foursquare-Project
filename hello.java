@@ -1,8 +1,14 @@
+
 package Sample;
 
 public class hello {
+  	public String sayHello() {
+		return "Hello";
+	}
 	public static void main(String[] args) {  
-	    //defining a variable  
+	    //defining a variable 
+    	hello obj = new hello();
+	    System.out.println(obj.sayHello());	
 	    int number=13;  
 		if(number==0){
 			System.out.println("VaISHNAVI");
@@ -19,4 +25,5 @@ System.out.println("not NUll");
 
 System.out.println("Vaishnavi");
 	}
+
 }
