@@ -7,6 +7,9 @@ public class hello {
 		if(number==0){
 			System.out.println("VaISHNAVI");
 		}
+		if(number!=0){
+System.out.println("not NUll");
+}
 	    //Check if the number is divisible by 2 or not  
 	    if(number%2==0){  
 	        System.out.println("even number");  
