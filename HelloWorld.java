@@ -7,6 +7,12 @@ public class HelloWorld {
 		System.out.println("Hello, World");
 		System.out.println("Vaishnavi");
 		System.out.println("Sachin");
+		if(3<4){
+			System.out.println("Successfull");
+		}else{
+			System.out.println("Failure");
+		}
+
 	}
 
 }
