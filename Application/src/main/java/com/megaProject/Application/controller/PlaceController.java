@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.megaProject.Application.model.Place;
 import com.megaProject.Application.model.PlaceType;
 
+
+import com.megaProject.Application.model.Place;
+import com.megaProject.Application.model.PlaceType;
 import com.megaProject.Application.repository.PlaceRepository;
 import com.megaProject.Application.repository.PlaceTypeRepository;
 import com.megaProject.Application.request.EnterPlace;
 import com.megaProject.Application.request.LatAndLon;
 import com.megaProject.Application.service.DistanceCalculator;
+
 
 @RestController
 @RequestMapping("/PlaceApi")
@@ -50,7 +55,6 @@ public class PlaceController {
 		return pagedResult.toList();
 
 
-	}
 
 	@PostMapping("/addPlaces")
 	public Place addPlace(@Valid @RequestBody EnterPlace place) {
@@ -113,6 +117,7 @@ public class PlaceController {
 		List<Place> place = result.toList();
 		
 
+
 		for (Place placeValues : place) {
 			double lat = placeValues.getLatitude();
 			double lon = placeValues.getLongitude();
@@ -133,6 +138,7 @@ public class PlaceController {
 		Pageable paging = PageRequest.of(pageNo, pageSize);
 		Page<Place> pagedResult = (Page<Place>) placeRepository.findByPopular(landmark,paging);
 		return pagedResult.toList();
+
 
 	}
 

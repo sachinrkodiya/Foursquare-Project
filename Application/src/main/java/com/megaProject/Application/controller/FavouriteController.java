@@ -7,14 +7,17 @@ import java.util.NoSuchElementException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -74,7 +77,7 @@ public class FavouriteController {
 		
 	}
 	
-	
+
 	@GetMapping("/getFavourite/{pageNo}/{pageSize}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Place> findFavourites(@RequestBody UserIdRequest userId,@PathVariable int pageNo, @PathVariable int pageSize) {
@@ -83,6 +86,7 @@ public class FavouriteController {
 		Pageable paging = PageRequest.of(pageNo, pageSize);
 		Page<Favourite> result = favouriteRepository.findFavourite(userId.getUserId(),paging); 
 		List<Favourite> fav = result.toList();
+
 		List<Place> Response = new ArrayList<Place>();
 		for(Favourite value : fav) {
 			int placeId = value.getPlace_id();
