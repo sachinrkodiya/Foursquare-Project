@@ -2,6 +2,16 @@ package com.megaProject.Application.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,10 +47,13 @@ public class FilterController {
 	FilterService filterService;
 
 	@GetMapping("/FeatureFilters")
-	public List<Place> filterByData(@RequestBody FilterRequest filReq) {
-		List<Place> place = placeRepo.findAll();
+	public List<Place> filterByData(@RequestBody FilterRequest filReq, @PathVariable int pageNo,
+			@PathVariable int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Place> pagedResult = placeRepo.findAll(paging);
+		List<Place> place = pagedResult.toList();
 		List<Place> placeList = new ArrayList<Place>();
-		List<Place> pl = new ArrayList<Place>();
+
 
 		List<Filter> featurelist = new ArrayList<Filter>();
 		if (filReq.getLandmark() == null) {
@@ -78,7 +91,9 @@ public class FilterController {
 			}
 
 		} else {
+
 			placeList = placeRepo.findByLandmark(filReq.getLandmark());
+
 
 			if (filReq.getCost() != 0) {
 				placeList = filterService.GetbyCost(filReq.getCost(), placeList);
@@ -92,11 +107,12 @@ public class FilterController {
 		if (filReq.getSortBy().equals("rating")) {
 			placeList = sortByRating(placeList);
 
+		} else {
+			placeList = sortByDistance(placeList, filReq.getLatitude(), filReq.getLongitude());
+
 		}
-		else {
-			placeList = sortByDistance(placeList,filReq.getLatitude(),filReq.getLongitude());
-			
-		}
+
+
 
 
 		
@@ -105,7 +121,6 @@ public class FilterController {
 
 	}
 
-//_____________________________-----==============
 
 	public List<Place> sortByRating(List<Place> places) {
 
@@ -114,7 +129,7 @@ public class FilterController {
 		return places;
 
 	}
-	
+
 	
 	public List<Place> sortByDistance(List<Place> places, double latitude, double longitude) {
 		
@@ -127,30 +142,27 @@ public class FilterController {
 			double lat = placeValues.getLatitude();
 			double lon = placeValues.getLongitude();
 			double km = distanceCal.distance(latitude, longitude, lat, lon);
-			System.out.println(placeValues.getId()+" ---  "+ km);
-			//System.out.println(km);
-			distance.add(new PlaceDistance(placeValues.getId(),km));
 
+			System.out.println(placeValues.getId() + " ---  " + km);
+			// System.out.println(km);
+			distance.add(new PlaceDistance(placeValues.getId(), km));
 
 		}
-		Collections.sort(distance,filterService.DistanceCompare);
-		
-	   
-	   		
+		Collections.sort(distance, filterService.DistanceCompare);
+
 		for (PlaceDistance i : distance) {
-			 System.out.println("values======== "+ i.getDistance() +" " + i.getPlaceId());
+			System.out.println("values======== " + i.getDistance() + " " + i.getPlaceId());
 			place.add(placeRepo.findByPlaceId(i.getPlaceId()));
-			
-			
 
 		}
-		
-		
+
 		return place;
-		
+
 	}
 
 }
+
+	
 
 
 

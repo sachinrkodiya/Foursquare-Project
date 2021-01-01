@@ -4,6 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.megaProject.Application.model.DAOUser;
 import com.megaProject.Application.model.Place;
 import com.megaProject.Application.model.ReviewRating;
+
 import com.megaProject.Application.model.UserDTO;
 import com.megaProject.Application.repository.PlaceRepository;
 import com.megaProject.Application.repository.ReviewRatingRepository;
@@ -28,6 +36,8 @@ import com.megaProject.Application.request.ReviewRatingRequest;
 import com.megaProject.Application.request.ReviewRequest;
 import com.megaProject.Application.response.MessageResponse;
 import com.megaProject.Application.response.OverallratingResponse;
+import com.megaProject.Application.response.RatingResponse;
+
 import com.megaProject.Application.response.ReviewResponse;
 
 @RestController
@@ -60,7 +70,8 @@ public class ReviewRatingController {
 
 	@PostMapping("/addRating")
 	@ResponseStatus(HttpStatus.CREATED)
-	public float addRating(@RequestBody RatingRequest ratReq) {
+	public RatingResponse addRating(@RequestBody RatingRequest ratReq) {
+
 
 		ReviewRating values = revRepository.findTheRating(ratReq.getUserId(), ratReq.getPlaceId());
 		values.setRating(ratReq.getRating());
@@ -79,21 +90,24 @@ public class ReviewRatingController {
 		place.setOverallRating(overall);
 		placeRepository.save(place);
 
-		return place.getOverallRating();
+		return new RatingResponse(place.getOverallRating());
 	}
 
-	@GetMapping("/reviews")
-	public List<ReviewResponse> getAllreviews(@RequestBody ReviewRequest request) {
+	@GetMapping("/reviews/{pageNo}/{pageSize}")
+	public List<ReviewResponse> getAllreviews(@RequestBody ReviewRequest request,@PathVariable int pageNo, @PathVariable int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
 		Place place = placeRepository.findByPlaceId(request.getPlaceId());
-		// DAOUser user=userDao.findByUserID(request.getUserId());
-		List<ReviewRating> review = revRepository.findByReview(request.getPlaceId());
+		Page<ReviewRating> result = revRepository.findByReview(request.getPlaceId(),paging);
+		List<ReviewRating> review = result.toList();
+
 		List<ReviewResponse> response = new ArrayList<>();
 
 		for (ReviewRating rev : review) {
 
 			DAOUser user = userDao.findByUserID(rev.getUser_id());
-			ReviewResponse newReview = new ReviewResponse(place.getId(), place.getName(), user.getUsername(),
-					user.getImage(), rev.getReview(), rev.getDate());
+			ReviewResponse newReview = new ReviewResponse(place.getId(), place.getName(), 
+					user.getImage(),user.getUsername(), rev.getReview(), rev.getDate());
+
 			response.add(newReview);
 
 		}

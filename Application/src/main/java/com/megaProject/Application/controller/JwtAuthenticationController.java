@@ -17,6 +17,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,7 @@ import com.megaProject.Application.config.JwtTokenUtil;
 import com.megaProject.Application.model.DAOUser;
 import com.megaProject.Application.model.JwtRequest;
 import com.megaProject.Application.model.JwtResponse;
+
 import com.megaProject.Application.model.UserDTO;
 import com.megaProject.Application.repository.FavouriteRepository;
 import com.megaProject.Application.repository.PlaceRepository;
@@ -148,16 +152,19 @@ public class JwtAuthenticationController {
 		return new MessageResponse("Password updated successfully");
 		}
 	
+
+	@GetMapping("/getUser/{userId}")
+	public DAOUser getUserById(@PathVariable(value = "userId") long userId) {
+		return userDao.findByUserID(userId);
+	}
 	
 
-	//=================
 	
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
 	String requestTokenHeader = request.getHeader("Authorization");
 	requestTokenHeader = null;
-	// jwtTokenUtil.invalidateRelatedTokens(requestTokenHeader);
-	// CookieUtil.clear(httpServletResponse, jwtTokenCookieName);
+
 	return "redirect:/";
 	}
 	

@@ -1,5 +1,6 @@
 package com.megaProject.Application.controller;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.megaProject.Application.model.Place;
+import com.megaProject.Application.model.PlaceType;
+
 
 import com.megaProject.Application.model.Place;
 import com.megaProject.Application.model.PlaceType;
@@ -26,7 +33,6 @@ import com.megaProject.Application.repository.PlaceTypeRepository;
 import com.megaProject.Application.request.EnterPlace;
 import com.megaProject.Application.request.LatAndLon;
 import com.megaProject.Application.service.DistanceCalculator;
-
 
 
 @RestController
@@ -41,10 +47,14 @@ public class PlaceController {
 	@Autowired
 	DistanceCalculator dist;
 
-	@GetMapping("/places")
-	public List<Place> getAllNotes() {
-		return placeRepository.findAll();
-	}
+
+	@GetMapping("/places/{pageNo}/{pageSize}")
+	public List<Place> getAllNotes(@PathVariable int pageNo, @PathVariable int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Place> pagedResult = placeRepository.findAll(paging);
+		return pagedResult.toList();
+
+
 
 	@PostMapping("/addPlaces")
 	public Place addPlace(@Valid @RequestBody EnterPlace place) {
@@ -88,19 +98,25 @@ public class PlaceController {
 	public Place getPlaceById(@PathVariable(value = "name") String name) {
 		return placeRepository.findByName(name).orElseThrow(() -> new RuntimeException("Error: Place is not found."));
 	}
-	
-	@GetMapping("/searchByLandmark/{landmark}")
-	public List<Place> getPlaceByLandmark(@PathVariable(value = "landmark") String landmark) {
-		List<Place> landmarkList = placeRepository.findByLandmark(landmark);
-		return landmarkList;
+
+	@GetMapping("/searchByLandmark/{landmark}/{pageNo}/{pageSize}")
+	public List<Place> getPlaceByLandmark(@PathVariable(value = "landmark") String landmark,@PathVariable int pageNo, @PathVariable int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Place> result = placeRepository.findByLandmark(landmark,paging);
+		List<Place> pagedResult = result.toList(); 
+		return pagedResult;
 
 	}
 
-	@GetMapping("/nearBy")
-	public List<Place> distanceValue(@RequestBody LatAndLon values) {
+	@GetMapping("/nearBy/{pageNo}/{pageSize}")
+	public List<Place> distanceValue(@RequestBody LatAndLon values,@PathVariable int pageNo, @PathVariable int pageSize) {
 
-		List<Place> place = placeRepository.findAll();
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Place> result = placeRepository.findAll(paging);
 		List<Place> distance = new ArrayList<Place>();
+		List<Place> place = result.toList();
+		
+
 
 		for (Place placeValues : place) {
 			double lat = placeValues.getLatitude();
@@ -116,13 +132,13 @@ public class PlaceController {
 
 	}
 
-	@GetMapping("/popular/{landmark}")
+	@GetMapping("/popular/{landmark}/{pageNo}/{pageSize}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<Place> popular(@PathVariable String landmark) {
+	public List<Place> popular(@PathVariable String landmark, @PathVariable int pageNo, @PathVariable int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Place> pagedResult = (Page<Place>) placeRepository.findByPopular(landmark,paging);
+		return pagedResult.toList();
 
-		List<Place> place  = placeRepository.findByPopular(landmark);
-
-		return place;
 
 	}
 
