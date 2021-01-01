@@ -158,7 +158,6 @@ public class JwtAuthenticationController {
 		return userDao.findByUserID(userId);
 	}
 	
-
 	
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {

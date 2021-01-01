@@ -12,12 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +55,6 @@ public class FilterController {
 		Page<Place> pagedResult = placeRepo.findAll(paging);
 		List<Place> place = pagedResult.toList();
 		List<Place> placeList = new ArrayList<Place>();
-
 
 		List<Filter> featurelist = new ArrayList<Filter>();
 		if (filReq.getLandmark() == null) {
@@ -92,7 +93,11 @@ public class FilterController {
 
 		} else {
 
+			// placeList = placeRepo.findByLandmark(filReq.getLandmark());
+
+
 			placeList = placeRepo.findByLandmark(filReq.getLandmark());
+
 
 
 			if (filReq.getCost() != 0) {
@@ -113,10 +118,6 @@ public class FilterController {
 		}
 
 
-
-
-		
-
 		return placeList;
 
 	}
@@ -129,8 +130,6 @@ public class FilterController {
 		return places;
 
 	}
-
-	
 	public List<Place> sortByDistance(List<Place> places, double latitude, double longitude) {
 		
 		List<PlaceDistance> distance = new ArrayList<PlaceDistance>();
@@ -138,11 +137,11 @@ public class FilterController {
 		List<PlaceDistance> temp = new ArrayList<PlaceDistance>();
 		
 
+
 		for (Place placeValues : places) {
 			double lat = placeValues.getLatitude();
 			double lon = placeValues.getLongitude();
 			double km = distanceCal.distance(latitude, longitude, lat, lon);
-
 			System.out.println(placeValues.getId() + " ---  " + km);
 			// System.out.println(km);
 			distance.add(new PlaceDistance(placeValues.getId(), km));
@@ -161,8 +160,4 @@ public class FilterController {
 	}
 
 }
-
-	
-
-
 
