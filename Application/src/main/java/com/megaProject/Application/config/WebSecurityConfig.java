@@ -64,8 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //				.antMatchers("/deleteFavourite").permitAll()
 //				.antMatchers("/getFavourite").permitAll()
 //				.antMatchers("/addReview").permitAll()
-//				.antMatchers("/addRating").permitAll()
-				.antMatchers("/FeatureFilters" ).permitAll()
+				.antMatchers("/addFilter").permitAll()
+				.antMatchers("/FeatureFilters/**" ).permitAll()
 				// all other requests need to be authenticated  "/FeatureFilter" 
 				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

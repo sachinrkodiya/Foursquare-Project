@@ -10,17 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,9 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.megaProject.Application.model.DAOUser;
 import com.megaProject.Application.model.Place;
 import com.megaProject.Application.model.ReviewRating;
-
-
-import com.megaProject.Application.model.UserDTO;
 
 import com.megaProject.Application.repository.PlaceRepository;
 import com.megaProject.Application.repository.ReviewRatingRepository;
@@ -41,7 +33,6 @@ import com.megaProject.Application.request.ReviewRequest;
 import com.megaProject.Application.response.MessageResponse;
 import com.megaProject.Application.response.OverallratingResponse;
 import com.megaProject.Application.response.RatingResponse;
-
 import com.megaProject.Application.response.ReviewResponse;
 
 @RestController
@@ -72,10 +63,9 @@ public class ReviewRatingController {
 		return new MessageResponse(revReq.getReview());
 	}
 
-	@PostMapping("/addRating")
+	@PutMapping("/addRating")
 	@ResponseStatus(HttpStatus.CREATED)
 	public RatingResponse addRating(@RequestBody RatingRequest ratReq) {
-
 
 		ReviewRating values = revRepository.findTheRating(ratReq.getUserId(), ratReq.getPlaceId());
 		values.setRating(ratReq.getRating());
@@ -103,7 +93,6 @@ public class ReviewRatingController {
 		Place place = placeRepository.findByPlaceId(request.getPlaceId());
 		Page<ReviewRating> result = revRepository.findByReview(request.getPlaceId(),paging);
 		List<ReviewRating> review = result.toList();
-
 		List<ReviewResponse> response = new ArrayList<>();
 
 		for (ReviewRating rev : review) {
@@ -111,7 +100,6 @@ public class ReviewRatingController {
 			DAOUser user = userDao.findByUserID(rev.getUser_id());
 			ReviewResponse newReview = new ReviewResponse(place.getId(), place.getName(), 
 					user.getImage(),user.getUsername(), rev.getReview(), rev.getDate());
-
 			response.add(newReview);
 
 		}

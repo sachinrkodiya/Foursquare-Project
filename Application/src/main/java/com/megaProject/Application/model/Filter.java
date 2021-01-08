@@ -172,16 +172,6 @@ public class Filter {
 	}
 	
 	
-
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 }

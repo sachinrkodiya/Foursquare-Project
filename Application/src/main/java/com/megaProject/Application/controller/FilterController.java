@@ -2,25 +2,19 @@ package com.megaProject.Application.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.Comparator;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.megaProject.Application.model.Filter;
@@ -48,12 +42,14 @@ public class FilterController {
 	@Autowired
 	FilterService filterService;
 
-	@GetMapping("/FeatureFilters")
+	@GetMapping("/FeatureFilters/{pageNo}/{pageSize}")
 	public List<Place> filterByData(@RequestBody FilterRequest filReq, @PathVariable int pageNo,
 			@PathVariable int pageSize) {
 		Pageable paging = PageRequest.of(pageNo, pageSize);
 		Page<Place> pagedResult = placeRepo.findAll(paging);
 		List<Place> place = pagedResult.toList();
+
+//		List<Place> place = placeRepo.findAll();
 		List<Place> placeList = new ArrayList<Place>();
 
 		List<Filter> featurelist = new ArrayList<Filter>();
@@ -92,13 +88,8 @@ public class FilterController {
 			}
 
 		} else {
-
-			// placeList = placeRepo.findByLandmark(filReq.getLandmark());
-
-
-			placeList = placeRepo.findByLandmark(filReq.getLandmark());
-
-
+			Page<Place> landmarkValues = placeRepo.findByLandmark(filReq.getLandmark(),paging);
+			placeList = landmarkValues.toList();
 
 			if (filReq.getCost() != 0) {
 				placeList = filterService.GetbyCost(filReq.getCost(), placeList);
@@ -108,20 +99,20 @@ public class FilterController {
 			placeList = filterService.getPlaceValues(featurelist);
 
 		}
+		if (filReq.getSortBy() != null) {
+			if (filReq.getSortBy().equals("rating")) {
+				placeList = sortByRating(placeList);
 
-		if (filReq.getSortBy().equals("rating")) {
-			placeList = sortByRating(placeList);
+			} else {
+				placeList = sortByDistance(placeList, filReq.getLatitude(), filReq.getLongitude());
 
-		} else {
-			placeList = sortByDistance(placeList, filReq.getLatitude(), filReq.getLongitude());
+			}
 
 		}
-
 
 		return placeList;
 
 	}
-
 
 	public List<Place> sortByRating(List<Place> places) {
 
@@ -130,13 +121,11 @@ public class FilterController {
 		return places;
 
 	}
+
 	public List<Place> sortByDistance(List<Place> places, double latitude, double longitude) {
-		
+
 		List<PlaceDistance> distance = new ArrayList<PlaceDistance>();
 		List<Place> place = new ArrayList<Place>();
-		List<PlaceDistance> temp = new ArrayList<PlaceDistance>();
-		
-
 
 		for (Place placeValues : places) {
 			double lat = placeValues.getLatitude();
@@ -159,5 +148,9 @@ public class FilterController {
 
 	}
 
-}
+	@RequestMapping(value = "/addFilter", method = RequestMethod.POST)
+	public ResponseEntity<?> addFilter(@RequestBody Filter filter) throws Exception {
+		return ResponseEntity.ok(filterRepo.save(filter));
+	}
 
+}

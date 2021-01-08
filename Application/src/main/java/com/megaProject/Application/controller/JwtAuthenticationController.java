@@ -5,7 +5,7 @@ package com.megaProject.Application.controller;
 import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,10 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.megaProject.Application.config.JwtTokenUtil;
 import com.megaProject.Application.model.DAOUser;
+import com.megaProject.Application.model.JwtBlackList;
 import com.megaProject.Application.model.JwtRequest;
 import com.megaProject.Application.model.JwtResponse;
-
 import com.megaProject.Application.model.UserDTO;
+import com.megaProject.Application.repository.BlacklistRepository;
 import com.megaProject.Application.repository.FavouriteRepository;
 import com.megaProject.Application.repository.PlaceRepository;
 import com.megaProject.Application.repository.UserDao;
@@ -62,6 +62,10 @@ public class JwtAuthenticationController {
 	@Autowired
 	PlaceRepository placeRepository;
 	
+	
+	@Autowired
+	BlacklistRepository jwtBlacklistRepository;
+	
 
 
 	@Autowired
@@ -72,8 +76,8 @@ public class JwtAuthenticationController {
 
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(authenticationRequest.getEmail());
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+				//.loadUserByUsername(authenticationRequest.getEmail());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		String email = authenticationRequest.getEmail();
@@ -103,7 +107,7 @@ public class JwtAuthenticationController {
 	
 	
 	
-	@PostMapping("/updateUser")
+	@PutMapping("/updateUser")
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageResponse updateUserDetails(@RequestBody UserDTO userValue) {
 		try {
@@ -129,7 +133,7 @@ public class JwtAuthenticationController {
 	
 	
 	
-	@PostMapping("/changePassword")
+	@PutMapping("/changePassword")
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageResponse changePassword(@RequestBody UserDTO userValue) {
 		try {
@@ -152,20 +156,25 @@ public class JwtAuthenticationController {
 		return new MessageResponse("Password updated successfully");
 		}
 	
-
+	
 	@GetMapping("/getUser/{userId}")
 	public DAOUser getUserById(@PathVariable(value = "userId") long userId) {
 		return userDao.findByUserID(userId);
 	}
 	
-	
-	@RequestMapping("/logout")
-	public String logout(HttpServletRequest request, HttpServletResponse response) {
-	String requestTokenHeader = request.getHeader("Authorization");
-	requestTokenHeader = null;
 
-	return "redirect:/";
+
+
+	@PutMapping(value = "/logOut")
+	public  MessageResponse logout(HttpServletRequest request,HttpSession httpSession){
+
+	String bearerToken = request.getHeader("Authorization");
+	String token=bearerToken.substring(7);
+	JwtBlackList jwtBlacklist = new JwtBlackList(token);
+	jwtBlacklistRepository.save(jwtBlacklist);
+	return new MessageResponse("Logged Out successfully");
 	}
+
 	
 	
 }

@@ -7,16 +7,16 @@ public class JwtResponse implements Serializable {
 	private static final long serialVersionUID = -8091879091924046844L;
 	private final String jwttoken;
 	private String username;
-	private String name;
+	private String email;
 	private String dob;
 	private String gender;
 	private Long phone;
 
-	public JwtResponse(String jwttoken,String username,String name,String dob,String gender,
+	public JwtResponse(String jwttoken,String username,String email,String dob,String gender,
 			Long phone) {
 		this.jwttoken = jwttoken;
 		this.username = username;
-		this.name = name;
+		this.email = email;
 		this.dob = dob;
 		this.gender = gender;
 		this.phone = phone;
@@ -30,8 +30,12 @@ public class JwtResponse implements Serializable {
 
 
 
-	public String getName() {
-		return name;
+
+
+
+
+	public String getEmail() {
+		return email;
 	}
 
 
