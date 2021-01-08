@@ -1,15 +1,13 @@
 package com.megaProject.Application.request;
 
 public class FilterRequest {
-	
-	
-	
+
 	private String landmark;
 	private double latitude;
 	private double longitude;
 	private float radius;
 	private int cost;
-	
+
 	private boolean creditCard;
 	private boolean delivery;
 	private boolean dog_friendly;
@@ -18,29 +16,12 @@ public class FilterRequest {
 	private boolean wifi;
 	private boolean walking;
 	private boolean parking;
-	
+
 	private String sortBy;
-	
-	
-	
-	
+
 	public FilterRequest() {
-		
+
 	}
-	
-	
-	
-	
-
-
-	
-	
-	
-
-
-
-
-
 
 	public FilterRequest(String landmark, double latitude, double longitude, float radius, int cost, boolean creditCard,
 			boolean delivery, boolean dog_friendly, boolean family_friendly, boolean outdoor, boolean wifi,
@@ -62,145 +43,53 @@ public class FilterRequest {
 		this.sortBy = sortBy;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public String getSortBy() {
 		return sortBy;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	public void setSortBy(String sortBy) {
 		this.sortBy = sortBy;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public String getLandmark() {
 		return landmark;
 	}
-
-
-
-
-
 
 	public void setLandmark(String landmark) {
 		this.landmark = landmark;
 	}
 
-
-
-
-
-
 	public double getLatitude() {
 		return latitude;
 	}
-
-
-
-
-
 
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-
-
-
-
-
 	public double getLongitude() {
 		return longitude;
 	}
-
-
-
-
-
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
-
-
-
-
-
 	public float getRadius() {
 		return radius;
 	}
-
-
-
-
-
 
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
 
-
-
-
-
-
 	public int getCost() {
 		return cost;
 	}
 
-
-
-
-
-
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
-
-
-
-
-
 
 	public boolean isCreditCard() {
 		return creditCard;
@@ -265,14 +154,5 @@ public class FilterRequest {
 	public void setParking(boolean parking) {
 		this.parking = parking;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

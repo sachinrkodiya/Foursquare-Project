@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,6 +23,5 @@ public interface ReviewRatingRepository extends JpaRepository<ReviewRating, Long
 	
 	@Query(value = "SELECT * FROM bootdb.review_rating where place_id=?1" ,nativeQuery = true)
 	Page<ReviewRating> findByReview(int placeId,Pageable paging);
-
 
 }

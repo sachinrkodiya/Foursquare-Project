@@ -17,6 +17,9 @@ public interface UserDao extends CrudRepository<DAOUser, Integer> {
 	@Query(value = "SELECT * FROM bootdb.user WHERE email = ?1", nativeQuery = true)
 	DAOUser findByEmail(String email);
 	
+	@Query(value = "SELECT * FROM bootdb.user WHERE username = ?1", nativeQuery = true)
+	DAOUser findByUsernames(String username);
+	
 	@Query(value = "SELECT * FROM bootdb.user WHERE id = ?1", nativeQuery = true)
 	DAOUser findByUserID(long userId);
 	

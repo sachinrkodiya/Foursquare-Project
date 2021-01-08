@@ -73,16 +73,7 @@ public class JwtTokenUtil implements Serializable {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 	
-	
-	public Boolean invalidateRelatedTokens(String token, UserDetails userDetails) {
-		final String username = getUsernameFromToken(token);
 
-		if (username.equals(userDetails.getUsername()) && !isTokenExpired(token)) {
-		token = null;
-		}
-		return false;
-
-		}
 	
 	
 	
