@@ -22,6 +22,6 @@ public interface ReviewRatingRepository extends JpaRepository<ReviewRating, Long
 	
 	
 	@Query(value = "SELECT * FROM bootdb.review_rating where place_id=?1" ,nativeQuery = true)
-	Page<ReviewRating> findByReview(int placeId,Pageable paging);
+	List<ReviewRating> findByReview(int placeId);
 
 }

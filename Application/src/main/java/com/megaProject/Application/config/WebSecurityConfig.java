@@ -63,8 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //				.antMatchers("/addFavourite").permitAll()
 //				.antMatchers("/deleteFavourite").permitAll()
 //				.antMatchers("/getFavourite").permitAll()
-//				.antMatchers("/addReview").permitAll()
+				.antMatchers("/api/file/**").permitAll()
 				.antMatchers("/addFilter").permitAll()
+				.antMatchers("/search" ).permitAll()
 				.antMatchers("/FeatureFilters/**" ).permitAll()
 				// all other requests need to be authenticated  "/FeatureFilter" 
 				.anyRequest().authenticated().and().

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.megaProject.Application.model.Distance;
 import com.megaProject.Application.model.Filter;
 import com.megaProject.Application.model.Place;
 import com.megaProject.Application.model.PlaceDistance;
@@ -203,19 +204,52 @@ public class FilterService {
 		}
 	};
 	
-	public static Comparator<PlaceDistance> DistanceCompare = new Comparator<PlaceDistance>() {
+	public static Comparator<Distance> DistanceCompare = new Comparator<Distance>() {
 
 		@Override
-		public int compare(PlaceDistance o1, PlaceDistance o2) {
-			
+		public int compare(Distance o1, Distance o2) {
+			double r1 =  o1.getDistance();
+			double r2 =  o2.getDistance();
 			int rate1 = (int) (o1.getDistance());
 			int rate2 = (int) (o2.getDistance());
+			if(r1 % rate1 != 0) {
+				rate1 = rate1+1;
+				
+			}
+			if(r2 % rate2 != 0) {
+				rate2 = rate2+1;
+				
+			}
 			int ans =  rate1 - rate2;
 			return ans;
 		}
 	};
 	
+//--------------
 	
+	
+	public static Comparator<Distance> PlaceRatings = new Comparator<Distance>() {
+		@Override
+		public int compare(Distance o1, Distance o2) {
+		    Place v1 = (Place) o1.getPlace();
+		    Place v2 = (Place) o2.getPlace();
+			float r1 =  v1.getOverallRating();
+			float r2 =  v2.getOverallRating();
+			int rate1 = (int) (v1.getOverallRating());
+			int rate2 = (int) (v2.getOverallRating());
+			if(r1 % rate1 != 0) {
+				rate1 = rate1+1;
+				
+			}
+			if(r2 % rate2 != 0) {
+				rate2 = rate2+1;
+				
+			}
+			int ans =  rate2 - rate1;
+			return ans;
+		}
+
+	};
 	
 
 }

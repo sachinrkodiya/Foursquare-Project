@@ -1,13 +1,16 @@
 package com.megaProject.Application.model;
 
+import javax.validation.constraints.NotBlank;
+
 public class UserDTO {
+	@NotBlank
 	private String email;
+	@NotBlank
 	private String password;
 	private String username;
 	private String gender;
-	private String dob;
-	
-
+	private String date_of_birth;
+	@NotBlank
 	private Long phone;
 	
 	
@@ -51,13 +54,15 @@ public class UserDTO {
 		this.gender = gender;
 	}
 
-	public String getDob() {
-		return dob;
+	public String getDate_of_birth() {
+		return date_of_birth;
 	}
 
-	public void setDob(String dob) {
-		this.dob = dob;
+	public void setDate_of_birth(String date_of_birth) {
+		this.date_of_birth = date_of_birth;
 	}
+
+
 	
 	
 

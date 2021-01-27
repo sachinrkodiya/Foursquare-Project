@@ -3,6 +3,7 @@ package com.megaProject.Application.service;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.megaProject.Application.model.DAOUser;
 import com.megaProject.Application.model.UserDTO;
 import com.megaProject.Application.repository.UserDao;
+import com.megaProject.Application.response.ReturnResponse;
 
 
 @Service
@@ -33,8 +35,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
 				new ArrayList<>());
 	}
-	
-	public DAOUser save(UserDTO user) {
+//doubt----	
+	public DAOUser saveUser(UserDTO user) {
 		DAOUser newUser = new DAOUser();
 		newUser.setEmail(user.getEmail());
 		newUser.setUsername(user.getEmail());
@@ -43,6 +45,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 		return userDao.save(newUser);
 	}
 	
+
 	public DAOUser update(DAOUser user) {
 		return userDao.save(user);
 	}

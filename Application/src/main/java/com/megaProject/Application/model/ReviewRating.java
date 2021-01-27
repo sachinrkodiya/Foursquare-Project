@@ -30,6 +30,18 @@ public class ReviewRating {
 	}
 	
 	
+	
+	
+	public ReviewRating(long user_id, int place_id, int rating) {
+		super();
+		this.user_id = user_id;
+		this.place_id = place_id;
+		this.rating = rating;
+	}
+
+
+
+
 	public ReviewRating(long user_id, int place_id, String review, int rating, String date) {
 		super();
 		this.user_id = user_id;
