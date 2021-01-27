@@ -3,31 +3,35 @@ package com.megaProject.Application.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.megaProject.Application.model.DAOUser;
 import com.megaProject.Application.model.Favourite;
 import com.megaProject.Application.model.Place;
 import com.megaProject.Application.repository.FavouriteRepository;
 import com.megaProject.Application.repository.PlaceRepository;
-import com.megaProject.Application.request.DeleteFeedback;
+import com.megaProject.Application.repository.UserDao;
 import com.megaProject.Application.request.FavRequest;
 import com.megaProject.Application.request.UserIdRequest;
-import com.megaProject.Application.response.MessageResponse;
+import com.megaProject.Application.response.ReturnResponse;
+import com.megaProject.Application.service.Pagging;
+
+
+
 
 
 
@@ -43,17 +47,34 @@ public class FavouriteController {
 	@Autowired
 	PlaceRepository placeRepository;
 	
+	@Autowired
+	Pagging pagging;
+	
+	@Autowired
+	UserDao userDao;
+	
 	
 	@PostMapping("/addFavourite")
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponse AddFavourite(@RequestBody FavRequest favValues ) {
+	public ResponseEntity<?> AddFavourite(@RequestBody FavRequest favValues ) {
 		Favourite value = new Favourite();
+		DAOUser user = userDao.findByUserID(favValues.getUserId());
+		if(user == null) {
+			return ResponseEntity.status(200).body(new ReturnResponse(204,"NO CONTENT","user Id not found"));
+			
+		}
+		Place place = placeRepository.findByPlaceId(favValues.getPlaceId());
+		if(place == null) {
+			return ResponseEntity.status(200).body(new ReturnResponse(204,"NO CONTENT","place Id not found"));
+			
+		}
+		
 		value.setUser_id(favValues.getUserId());
 		value.setPlace_id(favValues.getPlaceId());
 		favouriteRepository.save(value);
 		
 		
-		return new MessageResponse(" Favourite Added Succefully");
+		return ResponseEntity.status(200).body(new ReturnResponse(200," ","Favorite added successfully",value));
 		
 	}
 	
@@ -62,29 +83,37 @@ public class FavouriteController {
 	@DeleteMapping("/deleteFavourite")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Transactional
-	public MessageResponse addAdmin(@RequestBody DeleteFeedback values) {
+	public ResponseEntity<?> deleteFavourite(@RequestBody FavRequest values) {
 		
 		try {
-			favouriteRepository.deleteFavourite(values.getUserId(), values.getPlaceId());
-			return new MessageResponse(" Favourite Deleted Succefully");
+			Optional<Favourite> value = favouriteRepository.findFav(values.getUserId(), values.getPlaceId());
+			if(value.isEmpty()) {
+				return ResponseEntity.status(200).body(new ReturnResponse(204,"NOT CONTENT ","No data to delete"));	
+			}
+			else {
+				favouriteRepository.deleteFavourite(values.getUserId(), values.getPlaceId());
+				return ResponseEntity.status(200).body(new ReturnResponse(200," ","Favorite Deleted successfully"));	
+			}
+
 		} catch (NoSuchElementException e){
-			 return new MessageResponse("No Data Found To Delete");
+			return ResponseEntity.status(200).body(new ReturnResponse(204,"NOT FOUND ","No data to delete"));
 		}
 	
 		
 	}
 	
 	
-	@GetMapping("/getFavourite/{pageNo}/{pageSize}")
+	@GetMapping("/getFavourite")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<Place> findFavourites(@RequestBody UserIdRequest userId,@PathVariable int pageNo, @PathVariable int pageSize) {
+	public ResponseEntity<?> findFavourites(@RequestParam long userId,@RequestParam  int pageNo, @RequestParam  int pageSize) {
 		
-		
-		Pageable paging = PageRequest.of(pageNo, pageSize);
-		Page<Favourite> result = favouriteRepository.findFavourite(userId.getUserId(),paging); 
-		List<Favourite> fav = result.toList();
+		List<Favourite> result = favouriteRepository.findFavourite(userId); 
+		if(result.size() == 0) {
+			return ResponseEntity.status(200).body(new ReturnResponse(204,"NO CONTENT ","user id is not valid"));
+			
+		}
 		List<Place> Response = new ArrayList<Place>();
-		for(Favourite value : fav) {
+		for(Favourite value : result) {
 			int placeId = value.getPlace_id();
 			Place place = placeRepository.findByPlaceId(placeId);			
 			
@@ -92,7 +121,7 @@ public class FavouriteController {
 			Response.add(place);
 			
 		}
-		return Response;
+		return pagging.PagedValues(Response, pageNo, pageSize);
 		
 	}
 

@@ -2,6 +2,7 @@ package com.megaProject.Application.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,8 @@ import com.megaProject.Application.model.Feedback;
 import com.megaProject.Application.repository.FeedbackRepository;
 import com.megaProject.Application.repository.UserDao;
 import com.megaProject.Application.request.feedbackRequest;
-import com.megaProject.Application.response.MessageResponse;
+
+import com.megaProject.Application.response.ReturnResponse;
 import com.megaProject.Application.service.EmailService;
 
 
@@ -33,28 +35,32 @@ public class FeedbackController {
 	
 	@PostMapping("/feedback")
 	@ResponseStatus(HttpStatus.CREATED)
-	public MessageResponse feedbackDetails(@RequestBody feedbackRequest feedbackValues ) {
+	public ResponseEntity<?> feedbackDetails(@RequestBody feedbackRequest feedbackValues ) {
 		
 		Feedback values = new Feedback();
 		
 		DAOUser user = userDao.findByUserID(feedbackValues.getUserId());
+		if(user == null) {
+			return ResponseEntity.status(404).body(new ReturnResponse(404,"NOT FOUND","user dosen't exist"));
+			
+		}
 		if(user.getEmail().isEmpty()) {
-			return new MessageResponse("account doesn't exist");
+			return ResponseEntity.status(404).body(new ReturnResponse(404,"NOT FOUND","email dosen't exist"));
 			
 		}
 		
-		emailService.sendFeedback(user.getEmail(), feedbackValues.getText());
+		emailService.sendFeedback(user.getEmail(), feedbackValues.getFeedback());
 		
 		
 		
 		values.setUser_id(feedbackValues.getUserId());
-		values.setFeedbacks(feedbackValues.getText());
+		values.setFeedbacks(feedbackValues.getFeedback());
 		feedbackRepository.save(values);
 		
 		
 
 		
-		return new MessageResponse("feedback Added ");
+		return ResponseEntity.status(200).body(new ReturnResponse(200," ","Feedback added successfully"));
 		
 	}
 

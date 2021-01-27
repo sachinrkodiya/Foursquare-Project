@@ -1,6 +1,6 @@
 package com.megaProject.Application.response;
 
-import java.util.List;
+
 
 public class ReviewResponse {
 	private int placeId;

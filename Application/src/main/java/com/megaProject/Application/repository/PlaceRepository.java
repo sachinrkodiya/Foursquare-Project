@@ -20,6 +20,10 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
 	Optional<Place> findById(int id);
 	
 	
+	@Query(value = "SELECT * FROM bootdb.place where name=?1", nativeQuery = true)
+	List<Place> findByNames(String name);
+	
+	
 
 	@Query(value = "SELECT * FROM bootdb.place where id=?1" ,nativeQuery = true)
 	Place findByPlaceId(int placeId);

@@ -25,10 +25,10 @@ public class OTPService {
      });
    }
     
-    public int generateOTP(){
+    public int generateOTP(String email){
     	Random random = new Random();
     	int otp = 100000 + random.nextInt(900000);
-    	otpCache.put("OTPNUMBER",otp);
+    	otpCache.put(email,otp);
     	return otp;
     	 }
     
