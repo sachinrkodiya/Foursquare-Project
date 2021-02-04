@@ -55,6 +55,24 @@ public class Filter {
 	public Filter() {
 		
 	}
+	
+	
+
+
+	public Filter(boolean credit_card, boolean delivery, boolean dog_friendly, boolean outdoor, boolean family_friendly,
+			boolean walking, boolean parking, boolean wi_fi) {
+		super();
+		this.credit_card = credit_card;
+		this.delivery = delivery;
+		this.dog_friendly = dog_friendly;
+		this.outdoor = outdoor;
+		this.family_friendly = family_friendly;
+		this.walking = walking;
+		this.parking = parking;
+		this.wi_fi = wi_fi;
+	}
+
+
 
 
 	public Filter(int place_id, boolean credit_card, boolean delivery, boolean dog_friendly, boolean outdoor,

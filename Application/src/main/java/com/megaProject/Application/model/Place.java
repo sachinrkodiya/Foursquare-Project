@@ -80,7 +80,7 @@ public class Place {
 	String overview;
 
 	@Column
-	String fileUrl;
+	String image;
 
 	public int getId() {
 		return id;
@@ -145,16 +145,17 @@ public class Place {
 	public void setOverview(String overview) {
 		this.overview = overview;
 	}
+	
+	
 
-	public String getFileUrl() {
-		return fileUrl;
+
+
+	public String getImage() {
+		return image;
 	}
 
-	public void setFileUrl(String fileUrl) {
-		this.fileUrl = fileUrl;
-		
-		
-		
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public long getPhone() {
@@ -170,6 +171,24 @@ public class Place {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Place(int id, @NotBlank @Size(max = 50) String name, float overallRating,
+			double latitude, double longitude, @NotBlank int cost, @NotBlank long phone,
+			@NotBlank @Size(max = 200) String landmark, @NotBlank @Size(max = 200) String address,
+			@NotBlank @Size(max = 500) String overview, String image) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.overallRating = overallRating;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.cost = cost;
+		this.phone = phone;
+		this.landmark = landmark;
+		this.address = address;
+		this.overview = overview;
+		this.image = image;
+	}
+	
 	public Place(@NotBlank @Size(max = 50) String name, double latitude, double longitude, @NotBlank int cost,
 			@NotBlank @Size(max = 200) String landmark, @NotBlank @Size(max = 200) String address,
 			@NotBlank @Size(max = 500) String overview,  @NotBlank long phone) {
@@ -183,6 +202,10 @@ public class Place {
 		this.overview = overview;
 		this.phone = phone;
 	}
+	
+	
+
+
 	
 	
 	

@@ -3,7 +3,7 @@ package com.megaProject.Application.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+
 
 import javax.transaction.Transactional;
 
@@ -26,7 +26,7 @@ import com.megaProject.Application.repository.FavouriteRepository;
 import com.megaProject.Application.repository.PlaceRepository;
 import com.megaProject.Application.repository.UserDao;
 import com.megaProject.Application.request.FavRequest;
-import com.megaProject.Application.request.UserIdRequest;
+
 import com.megaProject.Application.response.ReturnResponse;
 import com.megaProject.Application.service.Pagging;
 
@@ -69,6 +69,13 @@ public class FavouriteController {
 			
 		}
 		
+		Favourite check = favouriteRepository.findFav(favValues.getUserId(), favValues.getPlaceId());
+		if(check != null) {
+			return ResponseEntity.status(200).body(new ReturnResponse(402,"Bad Credentials","Favorite already exist"));
+			
+		}
+		
+		
 		value.setUser_id(favValues.getUserId());
 		value.setPlace_id(favValues.getPlaceId());
 		favouriteRepository.save(value);
@@ -86,9 +93,10 @@ public class FavouriteController {
 	public ResponseEntity<?> deleteFavourite(@RequestBody FavRequest values) {
 		
 		try {
-			Optional<Favourite> value = favouriteRepository.findFav(values.getUserId(), values.getPlaceId());
-			if(value.isEmpty()) {
-				return ResponseEntity.status(200).body(new ReturnResponse(204,"NOT CONTENT ","No data to delete"));	
+			Favourite check = favouriteRepository.findFav(values.getUserId(), values.getPlaceId());
+			if(check == null) {
+				return ResponseEntity.status(200).body(new ReturnResponse(402,"Bad Credentials","Favourite  not found"));
+				
 			}
 			else {
 				favouriteRepository.deleteFavourite(values.getUserId(), values.getPlaceId());

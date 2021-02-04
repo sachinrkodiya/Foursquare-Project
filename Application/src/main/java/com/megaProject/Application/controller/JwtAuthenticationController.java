@@ -42,6 +42,8 @@ import com.megaProject.Application.service.JwtUserDetailsService;
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
+
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -87,9 +89,13 @@ public class JwtAuthenticationController {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		
 		
+		JwtResponse jwtResponse = new JwtResponse(token, value);
 
-		JwtResponse jwtResponse = new JwtResponse(token, value.getUsername(), value.getEmail(),
-				value.getDate_of_birth(), value.getGender(), value.getPhone());
+		
+		
+//
+//		JwtResponse jwtResponse = new JwtResponse(token, value.getUsername(), value.getEmail(),
+//				value.getDate_of_birth(), value.getGender(), value.getPhone());
 
 		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "USER SIGN IN SUCCESSFUL", jwtResponse));
 	}
@@ -143,7 +149,7 @@ public class JwtAuthenticationController {
 			return ResponseEntity.status(200).body(new ReturnResponse(204, "error " + e, "EMAIL NOT FOUND"));
 
 		}
-		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "USER DETAILS UPADTED SUCCESSFULLY"));
+		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "USER DETAILS UPDATED SUCCESSFULLY"));
 	}
 
 	@PutMapping("/changePassword")
@@ -163,7 +169,7 @@ public class JwtAuthenticationController {
 			return ResponseEntity.status(204).body(new ReturnResponse(204, "error " + e, "EMAIL NOT FOUND"));
 
 		}
-		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "PASSWORD UPADTED SUCCESSFULLY"));
+		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "PASSWORD UPDATED SUCCESSFULLY"));
 	}
 
 	@GetMapping("/getUser")
@@ -186,5 +192,12 @@ public class JwtAuthenticationController {
 		jwtBlacklistRepository.save(jwtBlacklist);
 		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "LOGGED OUT SUCCESSFULLY"));
 	}
+	
+	@RequestMapping(value = "/isTokenValid", method = RequestMethod.POST)
+	public ResponseEntity<?> validateToken() throws Exception {
+		return ResponseEntity.status(200).body(new ReturnResponse(200, "", "Token is valid"));
+	}
+	
+	
 
 }

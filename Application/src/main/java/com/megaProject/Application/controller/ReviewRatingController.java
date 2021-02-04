@@ -76,7 +76,7 @@ public class ReviewRatingController {
 		ReviewRating values = revRepository.findTheRating(revReq.getUserId(), revReq.getPlaceId());
 		if(values==null) {
 			 values = new ReviewRating(revReq.getUserId(), revReq.getPlaceId(), revReq.getReview(),
-					revReq.getRating(), date);	
+					0, date);	
 		}
 		else {
 			values.setReview(revReq.getReview());
@@ -127,6 +127,9 @@ public class ReviewRatingController {
 		float ans = 0;
 		int count = ratingLists.size();
 		for (ReviewRating rating : ratingLists) {
+			if(rating.getRating() == 0) {
+				count=count-1;
+			}
 			ans = ans + rating.getRating();
 		}
 

@@ -93,7 +93,7 @@ public class FileStorageController {
 			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("/downloadFile/" + fileName + "/").path(fileName).toUriString();
 
-			content.setFileUrl(fileDownloadUri);
+			content.setImage(fileDownloadUri);
 			placeRepository.save(content);
 
 			return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());

@@ -31,9 +31,9 @@ public interface FavouriteRepository extends JpaRepository<Favourite,Long>  {
 	@Transactional
 	@Modifying
 	@Query(value = "DELETE FROM bootdb.user_favourite where user_id = ?1 and place_id = ?2", nativeQuery = true)
-	 int deleteFavourite(long userId, int placeId);
+	void deleteFavourite(long userId, int placeId);
 	
 	@Query(value = "SELECT * FROM bootdb.user_favourite where user_id = ?1 and place_id = ?2", nativeQuery = true)
-	Optional<Favourite> findFav(long userId, int placeId);
+	Favourite findFav(long userId, int placeId);
 
 }

@@ -36,8 +36,6 @@ public class DAOUser {
 	@JsonIgnore
 	private String password;
 
-	
-	
 	public String getImage() {
 		return image;
 	}
@@ -45,15 +43,20 @@ public class DAOUser {
 	public void setImage(String image) {
 		this.image = image;
 	}
-/*
-	public String getName() {
-		return name;
+
+	public long getId() {
+		return id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setId(long id) {
+		this.id = id;
 	}
-*/
+
+	/*
+	 * public String getName() { return name; }
+	 * 
+	 * public void setName(String name) { this.name = name; }
+	 */
 	public String getDate_of_birth() {
 		return date_of_birth;
 	}
@@ -93,7 +96,7 @@ public class DAOUser {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -102,13 +105,14 @@ public class DAOUser {
 		this.email = email;
 	}
 
-	
 	public DAOUser() {
-		
+
 	}
-	public DAOUser(String username, String image, String email, String date_of_birth, String gender, Long phone,
-			String password) {
+
+	public DAOUser(long id, String username, String image, @NotBlank String email, String date_of_birth, String gender,
+			@NotBlank Long phone, @NotBlank String password) {
 		super();
+		this.id = id;
 		this.username = username;
 		this.image = image;
 		this.email = email;
@@ -116,6 +120,7 @@ public class DAOUser {
 		this.gender = gender;
 		this.phone = phone;
 		this.password = password;
-	}	
+	}
+	
 
 }

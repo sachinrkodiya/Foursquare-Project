@@ -3,6 +3,7 @@ package com.megaProject.Application.model;
 import javax.validation.constraints.NotBlank;
 
 public class UserDTO {
+	private long userId;
 	@NotBlank
 	private String email;
 	@NotBlank
@@ -61,6 +62,16 @@ public class UserDTO {
 	public void setDate_of_birth(String date_of_birth) {
 		this.date_of_birth = date_of_birth;
 	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+	
+	
 
 
 	
